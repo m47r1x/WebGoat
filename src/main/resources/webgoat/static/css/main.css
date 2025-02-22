@@ -171,7 +171,7 @@ img {
 }
 
 /* ==========================================================================
-   Main Content 
+   Main Content
    ========================================================================== */
 .main-content-wrapper {
     margin-left: 240px;
@@ -1435,4 +1435,8 @@ pre .conum {
 
 b.conum * {
     color: inherit !important
+}
+
+.spacing {
+    margin-left: 5px;
 }
