@@ -1,28 +1,10 @@
 /*
- * This file is part of WebGoat, an Open Web Application Security Project utility. For details, please see http://www.owasp.org/
- *
- * Copyright (c) 2002 - 2019 Bruce Mayhew
- *
- * This program is free software; you can redistribute it and/or modify it under the terms of the
- * GNU General Public License as published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with this program; if
- * not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * Getting Source ==============
- *
- * Source for this application is maintained at https://github.com/WebGoat/WebGoat, a repository for free software projects.
+ * SPDX-FileCopyrightText: Copyright © 2019 WebGoat authors
+ * SPDX-License-Identifier: GPL-2.0-or-later
  */
-
 package org.owasp.webgoat.webwolf.user;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -39,41 +21,40 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
-    @Mock
-    private UserRepository mockUserRepository;
+  @Mock private UserRepository mockUserRepository;
 
-    @InjectMocks
-    private UserService sut;
+  @InjectMocks private UserService sut;
 
-    @Test
-    public void testLoadUserByUsername(){
-        var username = "guest";
-        var password = "123";
-        WebGoatUser user = new WebGoatUser(username, password);
-        when(mockUserRepository.findByUsername(username)).thenReturn(user);
+  @Test
+  public void testLoadUserByUsername() {
+    var username = "guest";
+    var password = "123";
+    WebWolfUser user = new WebWolfUser(username, password);
+    when(mockUserRepository.findByUsername(username)).thenReturn(user);
 
-        var webGoatUser = sut.loadUserByUsername(username);
+    var webGoatUser = sut.loadUserByUsername(username);
 
-        Assertions.assertThat(username).isEqualTo(webGoatUser.getUsername());
-        Assertions.assertThat(password).isEqualTo(webGoatUser.getPassword());
-    }
+    Assertions.assertThat(username).isEqualTo(webGoatUser.getUsername());
+    Assertions.assertThat(password).isEqualTo(webGoatUser.getPassword());
+  }
 
-    @Test
-    public void testLoadUserByUsername_NULL(){
-        var username = "guest";
-        
-        when(mockUserRepository.findByUsername(username)).thenReturn(null);
+  @Test
+  public void testLoadUserByUsername_NULL() {
+    var username = "guest";
 
-        assertThrows(UsernameNotFoundException.class, ()->sut.loadUserByUsername(username));
-    }
+    when(mockUserRepository.findByUsername(username)).thenReturn(null);
 
-    @Test
-    public void testAddUser(){
-        var username = "guest";
-        var password = "guest";
+    assertThatExceptionOfType(UsernameNotFoundException.class)
+        .isThrownBy(() -> sut.loadUserByUsername(username));
+  }
 
-        sut.addUser(username, password);
+  @Test
+  public void testAddUser() {
+    var username = "guest";
+    var password = "guest";
 
-        verify(mockUserRepository, times(1)).save(any(WebGoatUser.class));
-    }
+    sut.addUser(username, password);
+
+    verify(mockUserRepository, times(1)).save(any(WebWolfUser.class));
+  }
 }

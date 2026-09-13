@@ -1,25 +1,31 @@
+/*
+ * SPDX-FileCopyrightText: Copyright © 2018 WebGoat authors
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ */
 package org.owasp.webgoat.container.asciidoc;
 
-import org.asciidoctor.ast.ContentNode;
-import org.asciidoctor.extension.InlineMacroProcessor;
-
 import java.util.Map;
+import org.asciidoctor.ast.PhraseNode;
+import org.asciidoctor.ast.StructuralNode;
+import org.asciidoctor.extension.InlineMacroProcessor;
 
 public class WebGoatVersionMacro extends InlineMacroProcessor {
 
-    public WebGoatVersionMacro(String macroName) {
-        super(macroName);
-    }
+  public WebGoatVersionMacro(String macroName) {
+    super(macroName);
+  }
 
-    public WebGoatVersionMacro(String macroName, Map<String, Object> config) {
-        super(macroName, config);
-    }
+  public WebGoatVersionMacro(String macroName, Map<String, Object> config) {
+    super(macroName, config);
+  }
 
-    @Override
-	public Object process(ContentNode contentNode, String target, Map<String, Object> attributes) {
-        var webgoatVersion = EnvironmentExposure.getEnv().getProperty("webgoat.build.version");
+  @Override
+  public PhraseNode process(
+      StructuralNode contentNode, String target, Map<String, Object> attributes) {
+    var webgoatVersion = EnvironmentExposure.getEnv().getProperty("webgoat.build.version");
 
-        //see https://discuss.asciidoctor.org/How-to-create-inline-macro-producing-HTML-In-AsciidoctorJ-td8313.html for why quoted is used
-        return createPhraseNode(contentNode, "quoted", webgoatVersion);
-    }
+    // see
+    // https://discuss.asciidoctor.org/How-to-create-inline-macro-producing-HTML-In-AsciidoctorJ-td8313.html for why quoted is used
+    return createPhraseNode(contentNode, "quoted", webgoatVersion);
+  }
 }
